@@ -1,9 +1,9 @@
-TypeScript: The Good Parts
+Mastering Angular $scope
 =======================
 
-Contains a web-based presentation about service patterns AngularJS.
+Contains a web-based presentation about using $scope in AngularJS.
 
-To view the slides online, go to http://jeremyalan.github.io/AngularJS-ServicePatterns
+To view the slides online, go to http://jeremyalan.github.io/MasteringAngularScope
 
 * Modules
   * Angular Components
