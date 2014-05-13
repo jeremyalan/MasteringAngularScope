@@ -1,0 +1,32 @@
+section
+    h2 Basic Example
+
+    div HTML
+        div.small-75
+            pre.
+                &lt;body <span class="highlight">ng-controller="MainCtrl"</span>&gt;
+                  &lt;header&gt;To-Do List&lt;/header&gt;
+                  &lt;ul&gt;
+                    &lt;li <span class="highlight">ng-repeat="item in items"</span>&gt;
+                      &lt;input type="checkbox"
+                             <span class="highlight">ng-model="isChecked"</span>
+                             <span class="highlight">ng-change="markAsComplete(item, isChecked)"</span> /&gt;
+                      &lt;span&gt;<span class="highlight">{{ item.Title }}</span>&lt;/span&gt;
+                    &lt;/li&gt;
+                  &lt;/ul&gt;
+                  &lt;button type="button" <span class="highlight">ng-click="addItem()"</span>&gt;Add Item&lt;/button&gt;
+                &lt;/body&gt;
+
+
+    div Javascript
+        div.small-75
+            pre.
+                function MainCtrl($scope, $http) {
+                    $http.get('/api/items')
+                        .success(function (items) {
+                            $scope.items = items;
+                        });
+
+                    $scope.addItem = function() { ... }
+                    $scope.markAsComplete = function(item, isChecked) { ... }
+                }

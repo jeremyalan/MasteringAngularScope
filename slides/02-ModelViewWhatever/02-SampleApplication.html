@@ -1,0 +1,38 @@
+
+<section>
+  <h2>Basic Example</h2>
+  <div class="span6">
+    <div class="pad-5">
+      <pre><html>
+    <body>
+        <header>To-Do List</header>
+        <ul>
+            <li ng-repeat="item in items">
+                <input type="checkbox" ng-model="isCompleted" ng-change="markAsCompleted(isCompleted)" />
+                <span>{{ item.Title }}</span>
+            </li>
+        </ul>
+        <div>
+            <button type="button" ng-click="addItem()"></button>
+        </div>
+    </body>
+</html>
+</pre>
+    </div>
+  </div>
+  <div class="span6">
+    <div class="pad-5">
+      <pre>function MainCtrl($scope, $http) {
+    $http.get('/api/items')
+        .success(function (items) {
+            $scope.items = items;
+        });
+        
+    $scope.addItem = function() { ... }
+    $scope.markAsCompleted = function(isCompleted) { ... }
+}
+
+angular.module('app').controller('MainCtrl', MainCtrl);</pre>
+    </div>
+  </div>
+</section>

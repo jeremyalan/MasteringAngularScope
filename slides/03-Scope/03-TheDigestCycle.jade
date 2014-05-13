@@ -1,0 +1,18 @@
+section
+    h2
+        span The&nbsp;
+        span.no-upper "$digest"
+        span &nbsp;cycle
+
+    ul
+        li No get|set methods = no "change" events
+            pre.strike.
+                $scope.on('change:isChecked', function () { ... });
+        li
+            div Instead of subscriptions, add "watchers"
+            pre.
+                $scope.$watch('isChecked', function () { ... });
+        li
+            span.underline ALL
+            span &nbsp;watchers are re-evaluated during&nbsp;
+            span.pre $digest()

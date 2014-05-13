@@ -45,10 +45,13 @@ li {
   text-align: center;
 }
 .strong {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 .underline {
   text-decoration: underline;
+}
+.strike {
+  text-decoration: line-through;
 }
 .no-upper {
   text-transform: none;
@@ -87,6 +90,20 @@ li {
 .reveal section pre .highlight {
   color: white;
 }
+.reveal textarea.pre {
+  letter-spacing: 0.2px;
+  color: #FFC66D;
+  background: #1E2022;
+  padding: 0.5em;
+  display: block;
+  overflow: auto;
+  border: none;
+  width: auto;
+  height: 100%;
+}
+.reveal textarea.pre .highlight {
+  color: white;
+}
 span.pre {
   letter-spacing: 0.2px;
   color: #FFC66D;
@@ -95,4 +112,15 @@ span.pre {
 }
 span.pre .highlight {
   color: white;
+}
+.row .span4 {
+  float: left;
+  width: 33%;
+}
+.row .span6 {
+  float: left;
+  width: 50%;
+}
+.pad-5 {
+  padding: 5%;
 }

@@ -19,8 +19,9 @@ li { line-height: 1.5em !important; }
 .text-left { display: block; text-align: left }
 .text-center { text-align: center }
 
-.strong { font-weight: bold }
+.strong { font-weight: bold !important }
 .underline { text-decoration: underline }
+.strike { text-decoration: line-through }
 .no-upper { text-transform: none }
 
 .pre {
@@ -47,4 +48,20 @@ li { line-height: 1.5em !important; }
 }
 
 .reveal section pre { .block-pre }
+.reveal textarea.pre {
+  .block-pre;
+
+  display: block;
+  overflow: auto;
+  border: none;
+  width: auto;
+  height: 100%;
+}
 span.pre { .inline-pre }
+
+.row {
+  .span4 { float: left; width: 33% }
+  .span6 { float: left; width: 50% }
+}
+
+.pad-5 { padding: 5% }
