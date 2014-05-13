@@ -1,0 +1,15 @@
+section
+    h2 Service
+
+    div
+        span module.service(...)
+
+    pre.
+        function PersonService($http) {
+            this.create = function (info) {
+                return $http.post('/api/person', info);
+            };
+        }
+
+        angular.module('api')
+            .service('$person', <span class="highlight">PersonService</span>);
