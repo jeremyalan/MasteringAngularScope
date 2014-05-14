@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Service Patterns in AngularJS</title>
-    <meta name="description" content="An overview of service patterns in AngularJS">
+    <title>Mastering Angular $scope</title>
+    <meta name="description" content="An overview of using $scope in AngularJS">
     <meta name="author" content="Jeremy Mason">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -128,13 +128,13 @@
           <section>
             <h2><span>Characteristics of&nbsp;</span><span class="no-upper">$scope</span></h2>
             <ul>
-              <li><span class="pre">$digest</span><span>,&nbsp;</span><span class="pre">$apply</span><span>, and &nbsp;</span><span class="pre">$watch</span></li>
-              <li>Scope Inheritance</li>
+              <li><span class="pre">$watch</span><span>,&nbsp;</span><span class="pre">$digest</span><span>, and &nbsp;</span><span class="pre">$apply</span></li>
+              <li><span class="pre">$new(), $parent</span><span class="small-75">&nbsp;(scope inheritance)</span></li>
               <li><span class="pre">$emit()</span><span>,&nbsp;</span><span class="pre">$broadcast()</span><span>, and &nbsp;</span><span class="pre">$on()</span></li>
             </ul>
           </section>
           <section>
-            <h2><span>The&nbsp;</span><span class="no-upper">"$digest"</span><span>&nbsp;cycle</span></h2>
+            <h2><span class="no-upper">$watch</span></h2>
             <ul>
               <li>No get|set methods = no "change" events
                 <pre class="strike">$scope.on('change:isChecked', function () { ... });</pre>
@@ -147,62 +147,129 @@
             </ul>
           </section>
           <section>
-            <h2><span class="no-upper">$digest</span><span>&nbsp;Quirks</span></h2>
+            <h2><span class="no-upper">$watch</span><span>&nbsp;expressions</span></h2>
             <ul>
-              <li>
-                <div>Can watch functions change the $scope?</div>
-                <ul>
-                  <li><span class="small-75">Yes - $digest repeats until a "steady" state is achieved</span></li>
-                </ul>
-              </li>
-              <li></li>
-              <li>
-                <div>What about async operations?</div>
-                <ul>
-                  <li><span class="small-75">AJAX, setTimeout, setInterval</span></li>
-                </ul>
-              </li>
+              <li><span>Can be interpolated via&nbsp;</span><span class="pre">{{ expression }}</span></li>
+              <li>Can be passed to Directives via attributes</li>
             </ul>
+            <div class="small-90">
+              <pre>&lt;body ng-controller="MainCtrl"&gt;
+  &lt;header&gt;To-Do List&lt;/header&gt;
+  &lt;ul&gt;
+    &lt;li ng-repeat="item in items"&gt;
+      &lt;input type="checkbox"
+             <span class="highlight">ng-model="isChecked"</span>
+             <span class="highlight">ng-change="markAsComplete(item, isChecked)"</span> /&gt;
+      &lt;span&gt;<span class="highlight">{{ item.Title }}</span>&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;button type="button" <span class="highlight">ng-click="addItem()"</span>&gt;Add Item&lt;/button&gt;
+&lt;/body&gt;</pre>
+            </div>
           </section>
           <section>
-            <h2>Dependencies</h2>
-            <h3><span class="no-upper">$inject</span></h3>
-            <ul>
-              <li>Use string values to counteract minification</li>
-              <li>$inject is tied to class declaration, not module registration</li>
-            </ul>
-            <pre>function MyService($http) {
-    ...
-};
-<span class="highlight">MyService.$inject = ['$http'];</span>
-
-angular.module('myModule')
-    .service('$myService', MyService);</pre>
-          </section>
-          <section>
-            <h2><span class="no-upper">$injector</span></h2>
-            <div>Angular's implementation of the Service Locator pattern</div>
+            <h2><span class="no-upper">$watch</span><span>&nbsp;expressions</span></h2>
+            <div>From the docs...</div>
+            <pre class="text-center-imp">Angular expressions are JavaScript-like code snippets that
+are usually placed in bindings such as {{ expression }}.
+</pre>
             <div class="break"></div>
             <ul>
-              <li>Created automatically during app initialization</li>
-              <li><span>Can be used at runtime against any function</span><br>
-                <pre>$injector.invoke(function (dep) { ... });</pre>
+              <li>
+                <div><span class="pre">$scope.$eval()</span><span class="small-75">&nbsp;- evaluate expression directly</span></div>
+                <pre>$scope.$eval('model.Name')</pre>
               </li>
-              <li><span>Or, create your own!</span><br>
-                <pre>var injector = angular.injector(['ng', 'mod1']);</pre>
+              <li>
+                <div><span class="pre">$parse</span><span class="small-75">&nbsp;- convert expressions into functions</span></div>
+                <pre>var getter = $parse(<span class="highlight">'model.Name'</span>);
+var setter = getter.assign;
+
+var result = getter($scope);
+setter($scope, 'Bob Smith');</pre>
               </li>
+            </ul>
+          </section>
+          <section>
+            <h2><span>The&nbsp;</span><span class="no-upper">$digest</span><span>&nbsp;Cycle</span></h2>
+            <ol class="no-wrap">
+              <li><span>Re-evaluates&nbsp;</span><span class="underline">ALL</span><span>&nbsp;watchers on&nbsp;</span><span class="pre">$scope</span></li>
+              <li class="break"><span>Call&nbsp;</span><span class="pre">$watch</span><span>&nbsp;function if value changes</span></li>
+              <li class="break">
+                <div>Repeat until no more changes</div>
+                <ul>
+                  <li><span class="small-75">Gives up after 10 consecutive iterations</span></li>
+                </ul>
+              </li>
+            </ol>
+          </section>
+          <section>
+            <h2><span>The&nbsp;</span><span class="no-upper">$digest</span><span>&nbsp;Cycle</span></h2>
+            <ul class="no-wrap">
+              <li>
+                <div><span>It's NOT Magic!</span><span class="small-75">&nbsp;- must be invoked manually</span></div>
+              </li>
+              <li>
+                <div><span>External actions will&nbsp;</span><span class="underline">NOT</span><span>&nbsp;trigger digest</span></div>
+                <ul>
+                  <li><span class="small-75 pre">$.ajax()</span></li>
+                  <li><span class="pre">setTimeout</span><span>,&nbsp;</span><span class="pre">setInterval</span></li>
+                  <li><span class="pre">$('#myButton').on('click', myClickHandler)</span></li>
+                </ul>
+              </li>
+              <li>
+                <div><span>Avoid calling&nbsp;</span><span class="pre">$scope.$digest()</span><span>&nbsp;directly</span></div>
+                <ul>
+                  <li><span class="small-75"><span>Use built-in services:&nbsp;</span><span class="pre">$http</span><span>,&nbsp;</span><span class="pre">$timeout</span><span>,&nbsp;</span><span class="pre">$q</span></span></li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2><span class="no-upper">$apply</span></h2>
+            <pre>$scope.$apply(myFunc);    // Using $apply
+
+$scope.$eval(myFunc);     // Using $eval + $digest
+$rootScope.$digest();
+</pre>
+            <div class="break"></div>
+            <ul>
+              <li>Evaluates an expression, then starts digest</li>
+              <li>
+                <div><span class="pre">$apply</span><span>&nbsp;always digests on&nbsp;</span><span class="pre">$rootScope</span></div>
+                <ul>
+                  <li><span class="small-75">Can affect overall performance</span></li>
+                </ul>
+              </li>
+              <li><span>Avoid calling&nbsp;</span><span class="pre">$apply()</span><span>&nbsp;directly</span></li>
             </ul>
           </section>
         </section>
         <section>
           <section>
-            <h2>Services</h2>
+            <h2>Scope Inheritance</h2>
             <ul>
-              <li><b>Constant/Value</b><br><span class="small">- Pass an instance</span></li>
-              <li><b>Service</b><br><span class="small">- Pass a constructor function</span></li>
-              <li><b>Factory</b><br><span class="small">- Pass a function that returns an instance</span></li>
-              <li><b>Provider</b><br><span class="small">- Pass a function that returns a "service object"</span></li>
-              <li><b>Decorator</b><br><span class="small">- Transform or replace an instance during creation</span></li>
+              <li><span>All scopes are descendants of&nbsp;</span><span class="pre">$rootScope</span></li>
+              <li><span class="pre">$scope.$new()</span><span class="small-75">&nbsp;- creates a new child scope</span></li>
+              <li>
+                <div><span class="pre">$scope.$parent</span><span class="small-75">&nbsp;- refers to parent scope</span></div>
+                <ul>
+                  <li><span class="small-75"><span>Avoid using&nbsp;</span><span class="pre">$parent</span></span></li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>Scope Inheritance</h2>
+            <h3>Child Scopes</h3>
+            <ul>
+              <li><span>All scopes are descendants of&nbsp;</span><span class="pre">$rootScope</span></li>
+              <li><span class="pre">$scope.$new()</span><span class="small-75">&nbsp;- creates a new child scope</span></li>
+              <li>
+                <div><span class="pre">$scope.$parent</span><span class="small-75">&nbsp;- refers to parent scope</span></div>
+                <ul>
+                  <li><span class="small-75"><span>Avoid using&nbsp;</span><span class="pre">$parent</span></span></li>
+                </ul>
+              </li>
             </ul>
           </section>
           <section>

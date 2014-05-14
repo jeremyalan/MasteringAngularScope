@@ -44,6 +44,9 @@ li {
 .text-center {
   text-align: center;
 }
+.text-center-imp {
+  text-align: center !important;
+}
 .strong {
   font-weight: bold !important;
 }
@@ -55,6 +58,9 @@ li {
 }
 .no-upper {
   text-transform: none;
+}
+.no-wrap {
+  white-space: nowrap;
 }
 .pre {
   letter-spacing: 0.2px;

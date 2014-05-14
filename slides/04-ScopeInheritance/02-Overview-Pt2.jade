@@ -1,0 +1,20 @@
+section
+    h2 Scope Inheritance
+    h3 Child Scopes
+
+    ul
+        li
+            span All scopes are descendants of&nbsp;
+            span.pre $rootScope
+        li
+            span.pre $scope.$new()
+            span.small-75 &nbsp;- creates a new child scope
+        li
+            div
+                span.pre $scope.$parent
+                span.small-75 &nbsp;- refers to parent scope
+            ul
+                li
+                    span.small-75
+                        span Avoid using&nbsp;
+                        span.pre $parent

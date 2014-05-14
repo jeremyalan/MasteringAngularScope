@@ -1,0 +1,40 @@
+section
+    h2
+        span The&nbsp;
+        span.no-upper $digest
+        span &nbsp;Cycle
+
+    ul.no-wrap
+        li
+            div
+                span It's NOT Magic!
+                span.small-75 &nbsp;- must be invoked manually
+        li
+            div
+                span External actions will&nbsp;
+                span.underline NOT
+                span &nbsp;trigger digest
+            ul
+                li
+                    span.small-75.pre $.ajax()
+                li
+                    span.pre setTimeout
+                    span ,&nbsp;
+                    span.pre setInterval
+                li
+                    span.pre $('#myButton').on('click', myClickHandler)
+        li
+            div
+                span Avoid calling&nbsp;
+                span.pre $scope.$digest()
+                span &nbsp;directly
+
+            ul
+                li
+                    span.small-75
+                        span Use built-in services:&nbsp;
+                        span.pre $http
+                        span ,&nbsp;
+                        span.pre $timeout
+                        span ,&nbsp;
+                        span.pre $q

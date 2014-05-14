@@ -1,0 +1,21 @@
+section
+    h2
+        span The&nbsp;
+        span.no-upper $digest
+        span &nbsp;Cycle
+
+    ol.no-wrap
+        li
+            span Re-evaluates&nbsp;
+            span.underline ALL
+            span &nbsp;watchers on&nbsp;
+            span.pre $scope
+        li.break
+            span Call&nbsp;
+            span.pre $watch
+            span &nbsp;function if value changes
+        li.break
+            div Repeat until no more changes
+            ul
+                li
+                    span.small-75 Gives up after 10 consecutive iterations

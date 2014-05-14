@@ -1,0 +1,27 @@
+section
+    h2
+        span.no-upper $watch
+        span &nbsp;expressions
+
+    div From the docs...
+    pre.text-center-imp.
+        Angular expressions are JavaScript-like code snippets that
+        are usually placed in bindings such as {{ expression }}.
+
+    .break
+    ul
+        li
+            div
+                span.pre $scope.$eval()
+                span.small-75 &nbsp;- evaluate expression directly
+            pre $scope.$eval('model.Name')
+        li
+            div
+                span.pre $parse
+                span.small-75 &nbsp;- convert expressions into functions
+            pre.
+                var getter = $parse(<span class="highlight">'model.Name'</span>);
+                var setter = getter.assign;
+
+                var result = getter($scope);
+                setter($scope, 'Bob Smith');

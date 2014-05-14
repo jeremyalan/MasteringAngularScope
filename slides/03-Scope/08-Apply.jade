@@ -1,0 +1,25 @@
+section
+    h2
+        span.no-upper $apply
+
+    pre.
+        $scope.$apply(myFunc);    // Using $apply
+
+        $scope.$eval(myFunc);     // Using $eval + $digest
+        $rootScope.$digest();
+
+    .break
+    ul
+        li Evaluates an expression, then starts digest
+        li
+            div
+                span.pre $apply
+                span &nbsp;always digests on&nbsp;
+                span.pre $rootScope
+            ul
+                li
+                    span.small-75 Can affect overall performance
+        li
+            span Avoid calling&nbsp;
+            span.pre $apply()
+            span &nbsp;directly
