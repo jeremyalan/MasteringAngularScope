@@ -1,0 +1,30 @@
+section
+    h2 Scope Events
+
+    .break
+    ul
+        li
+            div
+                span.strong.underline DO
+                span &nbsp;raise events between components
+            ul
+                li
+                    span.small-75 ex. Notify Controller of events caused by Directive
+                li
+                    span.small-75 Can also use $watch expressions
+        li
+            div
+                span.strong.underline DON'T
+                span &nbsp;rely on events bubbling up or down
+            ul
+                li
+                    span.small-75 Scope hierarchy is usually tied to DOM structure
+        li
+            div
+                span.strong.underline DON'T
+                span &nbsp;use events to communicate between Controlllers
+            ul
+                li
+                    span.small-75 Use $watch expressions to detect changes
+                li
+                    span.small-75 Use custom service to pass messages

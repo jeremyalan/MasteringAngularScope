@@ -1,0 +1,18 @@
+section
+    h2 Directives
+
+    div Two-Way Binding
+
+    pre.
+        scope: {
+            <span class="highlight">'name': '='</span>  // Same as '=name'
+                         // Optional if attribute name = property name
+        }
+
+    .break
+    pre.
+        &lt;x:myDirective <span class="highlight">name="customerName"</span> /&gt;
+
+    ul
+        li
+            span.small-75 Changes are kept in-sync between scopes

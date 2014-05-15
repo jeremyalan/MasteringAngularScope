@@ -1,0 +1,22 @@
+section
+    h2 Scope Events
+
+    ul
+        li
+            div
+                span.pre $scope.$emit()
+            ul
+                li Raise an event
+                li Bubbles UP to $parent
+        li
+            div
+                span.pre $scope.$broadcast()
+            ul
+                li Raise an event
+                li Bubbles DOWN to children
+        li
+            div
+                span.pre $scope.$on()
+            ul
+                li Listens for events raised on $scope
+                li Doesn't matter if it's bubbling up or down

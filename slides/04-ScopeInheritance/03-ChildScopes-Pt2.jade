@@ -1,0 +1,18 @@
+section
+    h2 Scope Inheritance
+
+    pre.
+        &lt;form&gt;
+            <span class="highlight">&lt;!-- Outer Scope --&gt;</span>
+            &lt;div ng-controller="OuterScopeCtrl"&gt;
+                &lt;span&gt;{{ value }}&lt;/span&gt;
+
+                <span class="highlight">&lt;!-- Inner Scope --&gt;</span>
+                &lt;div ng-controller="InnerScopeCtrl"&gt;
+                    &lt;input type="text" ng-model="value" /&gt;
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+        &lt;/form&gt;
+
+    div What is wrong here?

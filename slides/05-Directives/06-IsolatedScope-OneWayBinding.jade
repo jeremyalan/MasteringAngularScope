@@ -1,0 +1,18 @@
+section
+    h2 Directives
+
+    div One-Way Binding
+
+    pre.
+        template: '&lt;button ng-click="close()"&gt;&lt;/button&gt;',
+        scope: {
+            <span class="highlight">'close': '&onClose'</span>
+        }
+
+    .break
+    pre.
+        &lt;x:myDirective <span class="highlight">on-close="isClosed = true"</span> /&gt;
+
+    ul
+        li
+            span.small-75 Compiles expression to "getter" function on inner scope

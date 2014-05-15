@@ -1,0 +1,22 @@
+section
+    h2 Directives
+
+    div Text Binding
+
+    pre.
+        scope: {
+            <span class="highlight">'title': '@'</span> // Same as '@title'
+                         // Optional if attribute name = property name
+        }
+
+    .break
+    pre.
+        &lt;x:myDirective <span class="highlight">title="Hello {{ name }}"</span> /&gt;
+
+    ul
+        li
+            span.small-75 Used for displaying string values
+        li
+            span.small-75
+                span May contain&nbsp;
+                span.pre {{ interpolated expressions }}

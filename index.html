@@ -63,8 +63,9 @@
                 </ul>
               </div>
               <div class="span4">
-                <div class="strong underline">Whatever?</div>
+                <div class="strong underline">Whatever</div>
                 <ul>
+                  <li>Controllers</li>
                   <li>$scope</li>
                 </ul>
               </div>
@@ -260,207 +261,247 @@ $rootScope.$digest();
           </section>
           <section>
             <h2>Scope Inheritance</h2>
-            <h3>Child Scopes</h3>
+            <h3>Prototype Inheritance</h3>
+            <pre>$new: function () {
+    ...
+    
+    this.$$childScopeClass = function () { ... };
+    <span class="highlight">this.$$childScopeClass.prototype = this;</span>
+    
+    child = new this.$$childScopeClass();
+}
+</pre>
             <ul>
-              <li><span>All scopes are descendants of&nbsp;</span><span class="pre">$rootScope</span></li>
-              <li><span class="pre">$scope.$new()</span><span class="small-75">&nbsp;- creates a new child scope</span></li>
               <li>
-                <div><span class="pre">$scope.$parent</span><span class="small-75">&nbsp;- refers to parent scope</span></div>
+                <div>Scopes inherit properties from parent</div>
+                <div class="small-75">-- unless overridden in child scope</div>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>Scope Inheritance</h2>
+            <pre>&lt;form&gt;
+    <span class="highlight">&lt;!-- Outer Scope --&gt;</span>
+    &lt;div ng-controller="OuterScopeCtrl"&gt;
+        &lt;span&gt;{{ value }}&lt;/span&gt;
+        
+        <span class="highlight">&lt;!-- Inner Scope --&gt;</span>
+        &lt;div ng-controller="InnerScopeCtrl"&gt;
+            &lt;input type="text" ng-model="value" /&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/form&gt;
+</pre>
+            <div>What is wrong here?</div>
+          </section>
+          <section>
+            <h2>Scope Inheritance</h2>
+            <pre>&lt;form&gt;
+    <span class="highlight">&lt;!-- Outer Scope --&gt;</span>
+    &lt;div ng-controller="OuterScopeCtrl"&gt;
+        &lt;span&gt;{{ <span class="highlight">model.value</span> }}&lt;/span&gt;
+        
+        <span class="highlight">&lt;!-- Inner Scope --&gt;</span>
+        &lt;div ng-controller="InnerScopeCtrl"&gt;
+            &lt;input type="text" ng-model="<span class="highlight">model.value</span>" /&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/form&gt;
+</pre>
+            <div class="underline">Rule of Thumb</div>
+            <div class="small-75"><span class="pre">ng-model</span><span>&nbsp;should always contain a dot ( . )</span></div>
+          </section>
+          <section>
+            <h2>Scope Events</h2>
+            <ul>
+              <li>
+                <div><span class="pre">$scope.$emit()</span></div>
                 <ul>
-                  <li><span class="small-75"><span>Avoid using&nbsp;</span><span class="pre">$parent</span></span></li>
+                  <li>Raise an event</li>
+                  <li>Bubbles UP to $parent</li>
+                </ul>
+              </li>
+              <li>
+                <div><span class="pre">$scope.$broadcast()</span></div>
+                <ul>
+                  <li>Raise an event</li>
+                  <li>Bubbles DOWN to children</li>
+                </ul>
+              </li>
+              <li>
+                <div><span class="pre">$scope.$on()</span></div>
+                <ul>
+                  <li>Listens for events raised on $scope</li>
+                  <li>Doesn't matter if it's bubbling up or down</li>
                 </ul>
               </li>
             </ul>
           </section>
           <section>
-            <h2>Constant</h2>
-            <div><span>module.constant(...)</span></div>
-            <pre>angular.module('api')
-    .constant('$apiKey', <span class="highlight">'1234567890abcdef'</span>);</pre>
-          </section>
-          <section>
-            <h2>Service</h2>
-            <div><span>module.service(...)</span></div>
-            <pre>function PersonService($http) {
-    this.create = function (info) {
-        return $http.post('/api/person', info);
-    };
-}
-
-angular.module('api')
-    .service('$person', <span class="highlight">PersonService</span>);</pre>
-          </section>
-          <section>
-            <h2>Factory</h2>
-            <div><span>module.factory(...)</span></div>
-            <pre>angular.module('api')
-    .factory('$person', function ($http) {
-        <span class="highlight">return {</span>
-            create: function (info) {
-                return $http.post('/api/person', info);
-            }
-        <span class="highlight">};</span>
-    });</pre>
-          </section>
-          <section>
-            <h2>Provider</h2>
-            <div><span>module.provider(...)</span></div>
-            <pre>angular.module('api')
-    .provider('$person', function () {
-        <span class="highlight">return {</span>
-            <span class="highlight">$get:</span> function ($http) {
-                return {
-                    create: function (info) {
-                        return $http.post('/api/person', info);
-                    }
-                };
-            <span class="highlight">}</span>
-        <span class="highlight">};</span>
-    });</pre>
-          </section>
-          <section>
-            <h2>Provider</h2>
+            <h2>Scope Events</h2>
             <div class="break"></div>
             <ul>
-              <li><span>Strong separation between&nbsp;</span><span class="underline">configuration</span><span>&nbsp;and&nbsp;</span><span class="underline">consumption</span></li>
               <li>
-                <div>Creates two injectable instances</div>
-                <div>
-                  <pre>$myService, $myServiceProvider</pre>
-                </div>
+                <div><span class="strong underline">DO</span><span>&nbsp;raise events between components</span></div>
+                <ul>
+                  <li><span class="small-75">ex. Notify Controller of events caused by Directive</span></li>
+                  <li><span class="small-75">Can also use $watch expressions</span></li>
+                </ul>
               </li>
               <li>
-                <div>Providers can be injected into config callbacks</div>
-                <div class="small-85">
-                  <pre>// Fail!
-angular.module('...')
-    .config(function ($myService) { ... });
-    
-// OK!
-angular.module('...')
-    .config(function ($myServiceProvider) { ... });
-    
-angular.module('...')
-    .run(function ($myService) { ... });
-    
-angular.module('...')
-    .run(function ($myServiceProvider) { ... });</pre>
-                </div>
+                <div><span class="strong underline">DON'T</span><span>&nbsp;rely on events bubbling up or down</span></div>
+                <ul>
+                  <li><span class="small-75">Scope hierarchy is usually tied to DOM structure</span></li>
+                </ul>
+              </li>
+              <li>
+                <div><span class="strong underline">DON'T</span><span>&nbsp;use events to communicate between Controlllers</span></div>
+                <ul>
+                  <li><span class="small-75">Use $watch expressions to detect changes</span></li>
+                  <li><span class="small-75">Use custom service to pass messages</span></li>
+                </ul>
               </li>
             </ul>
-          </section>
-          <section>
-            <h2>Provider</h2>
-            <div><span>Example</span></div>
-            <div class="small-65">
-              <pre>angular.module('api')
-    .provider('$person', function () {
-        var personCache = { };
-        var provider = { cache: false };
-        
-        provider.$get = function ($q, http) {
-            return {
-                fetch: function (id) {
-                    <span class="highlight">
-                    if (provider.cache && personCache[id]) {
-                        return $q.when(personCache[id]);
-                    }
-                    </span>
-                    return $http.get('/api/persons/' + id)
-                        .then(function (result) {
-                            <span class="highlight">
-                            if (provider.cache) {
-                                personCache[id] = result.data;
-                            }
-                            </span>
-                            return result.data;
-                        });
-                }
-            };
-        };
-        
-        return provider;
-    });
-    
-angular.module('myApp')
-    .config(function ($personProvider) {
-        $personProvider.cache = true;
-    });</pre>
-            </div>
-          </section>
-          <section>
-            <h2>Decorator</h2>
-            <div><span>module.decorator(...)</span></div>
-            <pre>angular.module('api')
-    .decorator('$person', function ($delegate) {
-        var newInstance = {};
-        
-        // ...
-        
-        return newInstance;
-    });</pre>
-            <ul>
-              <li><span>Use&nbsp;</span><span class="pre">$delegate</span><span>&nbsp;to inject the service</span></li>
-            </ul>
-          </section>
-          <section>
-            <h2>Decorator</h2>
-            <div><span>Modify a service using decorator</span></div>
-            <pre>angular.module('api')
-    .decorator('$person', function ($q, $delegate) {
-        var personCache = {};
-        
-        var fetch = $delegate.fetch;
-        <span class="highlight">$delegate.fetch = function (id) {
-            if (personCache[id]) {
-                return $q.when(personCache[id]);
-            }
-            
-            return fetch(id);
-        };
-        </span>
-        return $delegate;
-    });</pre>
-          </section>
-          <section>
-            <h2>Decorator</h2>
-            <div><span>Replace a service using decorator</span></div>
-            <pre>angular.module('api')
-    .decorator('$person', function ($q, $delegate) {
-        var personCache = {};
-        <span class="highlight">
-        return {
-            fetch: function (id) {
-                if (personCache[id]) {
-                    return $q.when(personCache[id]);
-                }
-                
-                return $delegate.fetch(id);
-            }
-        };</span>
-    });</pre>
           </section>
         </section>
         <section>
           <section>
-            <h2>Controllers</h2>
-            <div><span>module.controller(...)</span></div>
-            <pre>function CreatePersonCtrl($scope, $person) {
-    $scope.model = {};
+            <h2>Directives</h2>
+            <pre>angular.module('app', [])
+    .directive('myDirective', function () {
     
-    $scope.create = function () {
-        var info = {
-            FirstName: $scope.model.firstName;
-            LastName: $scope.model.lastName;
+        return {
+            restrict: 'EAC',
+            template: 'myTemplate.html',
+            templateUrl: '&lt;div&gt;My template&lt;/div&gt;',
+            
+            <span class="highlight">scope: { ... }</span>
         };
         
-        $person.create(info)
-            .then(...);
-    };
+    });</pre>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <h3>Isolated Scope</h3>
+            <pre><div class="text-center">
+    <span class="strong">Best Practice:</span>
+    Use the scope option to create isolate scopes when making
+    components that you want to reuse throughout your app.
+</div>
+</pre>
+            <div class="break"></div>
+            <div class="strong">Why?</div>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <h3>Isolated Scope</h3>
+            <ul>
+              <li>Isolated scopes DO NOT prototypally inherit from parent</li>
+              <li>Only selected properties "bind" between scopes</li>
+            </ul>
+            <div class="break"></div>
+            <ul>
+              <li>
+                <div>Pros:</div>
+                <ul>
+                  <li>Use meaningful names from inner scope</li>
+                  <li>No "magic" properties on scope - Bind whatever you want</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <h3>Scope Syntax</h3>
+            <div class="break"></div>
+            <div style="margin: 0 auto; width: 75%" class="text-left">
+              <div><span><span class="pre">property</span><span>&nbsp;- name of isolated scope property</span></span></div>
+              <div><span><span class="pre">attribute</span><span>&nbsp;- attribute name</span></span></div>
+              <div>
+                <div><span><span class="pre">prefix</span><span>&nbsp;- indicates how binding should occur</span></span></div>
+              </div>
+            </div>
+            <pre>scope: {
+    'property': '=attr'
 }
 
-angular.module('app')
-    .controller('CreatePersonCtrl', CreatePersonCtrl);</pre>
+</pre>
+            <div>Three types of binding:</div>
+            <ul>
+              <li style="line-height: 1em !important"><span class="small-75">- Text</span></li>
+              <li style="line-height: 1em !important"><span class="small-75">- One-Way</span></li>
+              <li style="line-height: 1em !important"><span class="small-75">- Two-Way</span></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <div>Text Binding</div>
+            <pre>scope: {
+    <span class="highlight">'title': '@'</span> // Same as '@title'
+                 // Optional if attribute name = property name
+}
+</pre>
+            <div class="break"></div>
+            <pre>&lt;x:myDirective <span class="highlight">title="Hello {{ name }}"</span> /&gt;
+</pre>
+            <ul>
+              <li><span class="small-75">Used for displaying string values</span></li>
+              <li><span class="small-75"><span>May contain&nbsp;</span><span class="pre">{{ interpolated expressions }}</span></span></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <div>One-Way Binding</div>
+            <pre>template: '&lt;button ng-click="close()"&gt;&lt;/button&gt;',
+scope: {
+    <span class="highlight">'close': '&onClose'</span>
+}
+</pre>
+            <div class="break"></div>
+            <pre>&lt;x:myDirective <span class="highlight">on-close="isClosed = true"</span> /&gt;
+</pre>
+            <ul>
+              <li><span class="small-75">Compiles expression to "getter" function on inner scope</span></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <div>Two-Way Binding</div>
+            <pre>scope: {
+    <span class="highlight">'name': '='</span>  // Same as '=name'
+                 // Optional if attribute name = property name
+}
+</pre>
+            <div class="break"></div>
+            <pre>&lt;x:myDirective <span class="highlight">name="customerName"</span> /&gt;
+</pre>
+            <ul>
+              <li><span class="small-75">Changes are kept in-sync between scopes</span></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <div>Transclude</div>
+            <div class="text-left small-75">Input:</div>
+            <pre>&lt;x:myDialog title="My title" on-close="closeDialog()"&gt;
+    <span class="highlight">&lt;div&gt;Hi {{ username }}!&lt;/div&gt;</span>
+&lt;/x:myDialog&gt;
+</pre>
+            <div class="text-left small-75">Output:</div>
+            <pre>&lt;div class="modal"&gt;
+    &lt;div class="modal-header"&gt;
+        &lt;span&gt;My title&lt;/span&gt;
+        &lt;a href="#" class="close" ng-click="close()"&gt;X&lt;/a&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="modal-content" <span class="highlight">ng-transclude</span>&gt;
+        <span class="highlight">&lt;div&gt;Hi {{ username }}!&lt;/div&gt;</span>
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+            <div><span class="small-75"><span>Question - What is the value of&nbsp;&nbsp;</span><span class="pre">{{ username }}</span><span>&nbsp;&nbsp;?</span></span></div>
           </section>
         </section>
         <section>

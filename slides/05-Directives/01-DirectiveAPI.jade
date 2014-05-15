@@ -1,0 +1,16 @@
+section
+    h2 Directives
+
+    pre.
+        angular.module('app', [])
+            .directive('myDirective', function () {
+
+                return {
+                    restrict: 'EAC',
+                    template: 'myTemplate.html',
+                    templateUrl: '&lt;div&gt;My template&lt;/div&gt;',
+
+                    <span class="highlight">scope: { ... }</span>
+                };
+
+            });

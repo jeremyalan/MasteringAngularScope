@@ -1,0 +1,18 @@
+section
+    h2 Scope Inheritance
+    h3 Prototype Inheritance
+
+    pre.
+        $new: function () {
+            ...
+
+            this.$$childScopeClass = function () { ... };
+            <span class="highlight">this.$$childScopeClass.prototype = this;</span>
+
+            child = new this.$$childScopeClass();
+        }
+
+    ul
+        li
+            div Scopes inherit properties from parent
+            div.small-75 -- unless overridden in child scope
